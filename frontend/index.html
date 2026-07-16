@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Motion Analyzer</title>
+</head>
+<body>
+
+<h2>Upload Video</h2>
+
+<select id="mode">
+    <option value="sprint">Sprint</option>
+    <option value="tennis">Tennis</option>
+    <option value="health">Health</option>
+</select>
+
+<br><br>
+
+<input type="file" id="videoInput" accept="video/*">
+
+<br><br>
+
+<button onclick="uploadVideo()">Analyze</button>
+
+<h3>Result:</h3>
+<pre id="output"></pre>
+
+<script>
+async function uploadVideo() {
+    const fileInput = document.getElementById("videoInput");
+    const mode = document.getElementById("mode").value;
+
+    if (!fileInput.files.length) {
+        alert("Please select a video");
+        return;
+    }
+
+    const file = fileInput.files[0];
+
+    const formData = new FormData();
+    formData.append("video", file);
+
+    const url = `https://ai-sports-and-healthcare-tracker.onrender.com/analyze?mode=${mode}`;
+
+    document.getElementById("output").innerText = "Processing...";
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        document.getElementById("output").innerText =
+            JSON.stringify(data, null, 2);
+
+    } catch (error) {
+        document.getElementById("output").innerText =
+            "Error: " + error;
+    }
+}
+</script>
+
+</body>
+</html>
