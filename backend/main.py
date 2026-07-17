@@ -1,5 +1,8 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+import os
 
 from modules import sprint_analysis, tennis_analysis, health_analysis
 from core.video_processor import process_video
@@ -8,6 +11,9 @@ from core.confidence import is_low_confidence
 from fallback.gemini_service import analyze_with_gemini
 
 app = FastAPI()
+
+# Serve static files (CSS, JS)
+app.mount("/static", StaticFiles(directory="../frontend"), name="static")
 
 # CORS (REQUIRED for frontend)
 app.add_middleware(
@@ -20,8 +26,8 @@ app.add_middleware(
 
 
 @app.get("/")
-def home():
-    return {"message": "AI Motion Analysis API running"}
+def serve_frontend():
+    return FileResponse("../frontend/index.html")
 
 
 @app.post("/analyze")
