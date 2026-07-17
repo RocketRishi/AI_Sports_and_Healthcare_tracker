@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>AI Motion Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -39,7 +40,8 @@ async function uploadVideo() {
     const formData = new FormData();
     formData.append("video", file);
 
-    const url = `https://ai-sports-and-healthcare-tracker.onrender.com/analyze?mode=${mode}`;
+    // ✅ FIXED HERE
+    const url = `/analyze?mode=${mode}`;
 
     document.getElementById("output").innerText = "Processing...";
 
