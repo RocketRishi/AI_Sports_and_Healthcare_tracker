@@ -1,13 +1,25 @@
 body {
-    font-family: Arial, sans-serif;
     background: #0f172a;
     color: #e2e8f0;
+    font-family: Arial;
     text-align: center;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
     padding: 40px;
 }
 
-h2 {
+h1 {
     color: #38bdf8;
+}
+
+.card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
 }
 
 select,
@@ -15,28 +27,22 @@ input,
 button {
     margin: 10px;
     padding: 10px;
-    font-size: 16px;
     border-radius: 8px;
-    border: none;
 }
 
 button {
-    background-color: #38bdf8;
-    color: black;
+    background: #38bdf8;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #0ea5e9;
+.results {
+    margin-top: 30px;
+    text-align: left;
 }
 
-#output {
-    margin-top: 20px;
-    background: #1e293b;
+#nlOutput {
+    background: #111827;
     padding: 15px;
     border-radius: 10px;
-    text-align: left;
-    display: inline-block;
-    max-width: 600px;
-    overflow-x: auto;
+    margin-bottom: 20px;
 }
