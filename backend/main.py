@@ -3,6 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 import os
+from groq import Groq
+import json
+
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 from modules import sprint_analysis, tennis_analysis, health_analysis
 from core.video_processor import process_video
@@ -29,6 +33,30 @@ app.add_middleware(
 def serve_frontend():
     return FileResponse("../frontend/index.html")
 
+def translate_to_natural_language(data, mode):
+    prompt = f"""
+    You are a sports and health AI coach.
+
+    Convert this JSON into clear, actionable advice for a user.
+
+    Mode: {mode}
+
+    JSON:
+    {json.dumps(data)}
+
+    Output:
+    - Short explanation
+    - Clear improvement tips
+    - No technical jargon
+    """
+
+    response = client.chat.completions.create(
+        model="llama3-70b-8192",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.3
+    )
+
+    return response.choices[0].message.content
 
 @app.post("/analyze")
 async def analyze(mode: str, video: UploadFile = File(...)):
@@ -63,10 +91,16 @@ async def analyze(mode: str, video: UploadFile = File(...)):
         else:
             raise HTTPException(status_code=400, detail="Invalid mode")
 
+        nl_output = translate_to_natural_language(result, mode)
+
         return {
             "used_fallback": False,
-            "data": result
+            "json": result,
+            "natural_language": nl_output
         }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+
