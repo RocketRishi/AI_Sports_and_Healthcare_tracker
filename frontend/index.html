@@ -1,67 +1,44 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>AI Motion Analyzer</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>AI Motion Analysis</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
 
-<h2>Upload Video</h2>
+    <div class="container">
 
-<select id="mode">
-    <option value="sprint">Sprint</option>
-    <option value="tennis">Tennis</option>
-    <option value="health">Health</option>
-</select>
+        <h1>AI Motion Analysis Platform</h1>
+        <p>Upload a video or image. Get instant feedback on performance and injury risk.</p>
 
-<br><br>
+        <div class="card">
 
-<input type="file" id="videoInput" accept="video/*">
+            <select id="mode">
+                <option value="sprint">Sprint Analysis</option>
+                <option value="tennis">Tennis Analysis</option>
+                <option value="health">Health Analysis</option>
+            </select>
 
-<br><br>
+            <input type="file" id="fileInput" accept="video/*,image/*">
 
-<button onclick="uploadVideo()">Analyze</button>
+            <button onclick="analyze()">Analyze</button>
 
-<h3>Result:</h3>
-<pre id="output"></pre>
+        </div>
 
-<script>
-async function uploadVideo() {
-    const fileInput = document.getElementById("videoInput");
-    const mode = document.getElementById("mode").value;
+        <div class="results">
+            <h2>Natural Language Feedback</h2>
+            <div id="nlOutput"></div>
 
-    if (!fileInput.files.length) {
-        alert("Please select a video");
-        return;
-    }
+            <h2>Raw Data</h2>
+            <pre id="jsonOutput"></pre>
+        </div>
 
-    const file = fileInput.files[0];
+    </div>
 
-    const formData = new FormData();
-    formData.append("video", file);
-
-    // ✅ FIXED HERE
-    const url = `/analyze?mode=${mode}`;
-
-    document.getElementById("output").innerText = "Processing...";
-
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            body: formData
-        });
-
-        const data = await response.json();
-
-        document.getElementById("output").innerText =
-            JSON.stringify(data, null, 2);
-
-    } catch (error) {
-        document.getElementById("output").innerText =
-            "Error: " + error;
-    }
-}
-</script>
+    <script src="/static/script.js"></script>
 
 </body>
+
 </html>
