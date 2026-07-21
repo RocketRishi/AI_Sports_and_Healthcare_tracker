@@ -1,33 +1,35 @@
-async function uploadVideo() {
-    const fileInput = document.getElementById("videoInput");
+async function analyze() {
+    const fileInput = document.getElementById("fileInput");
     const mode = document.getElementById("mode").value;
-    const output = document.getElementById("output");
 
     if (!fileInput.files.length) {
-        alert("Select a video first");
+        alert("Upload a file");
         return;
     }
 
     const file = fileInput.files[0];
 
     const formData = new FormData();
-    formData.append("video", file);
+    formData.append("video", file);  // backend still expects "video"
 
-    const url = `https://ai-sports-and-healthcare-tracker.onrender.com/analyze?mode=${mode}`;
-
-    output.innerText = "Processing...";
+    document.getElementById("nlOutput").innerText = "Processing...";
+    document.getElementById("jsonOutput").innerText = "";
 
     try {
-        const response = await fetch(url, {
+        const response = await fetch(`/analyze?mode=${mode}`, {
             method: "POST",
             body: formData
         });
 
         const data = await response.json();
 
-        output.innerText = JSON.stringify(data, null, 2);
+        document.getElementById("nlOutput").innerText =
+            data.natural_language || "No feedback";
 
-    } catch (error) {
-        output.innerText = "Error: " + error;
+        document.getElementById("jsonOutput").innerText =
+            JSON.stringify(data.json, null, 2);
+
+    } catch (err) {
+        document.getElementById("nlOutput").innerText = "Error: " + err;
     }
 }
